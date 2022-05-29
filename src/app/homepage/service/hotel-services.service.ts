@@ -1,77 +1,41 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import axios from 'axios';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
+import axios, { AxiosResponse } from 'axios';
 import { Hotel } from '../util-models/hotel.model';
-
+import { Room } from '../util-models/room.model';
+import { MealPlan } from '../util-models/meal-plan.model';
+import { MealDisponibility } from '../util-models/meal_disponibility.model';
+import { RoomDisponibility } from '../util-models/room-disponibility.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HotelServicesService {
+  constructor(private http: HttpClient) {}
 
-  constructor() { }
-
-  getHotels(){
-    axios.get('http://www.mocky.io/v2/5e4a7e4f2f00005d0097d253')
-    .then((result) => {
-      console.log('hotels',result.data);
-
-      return result.data
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-
+  getHotels(): Observable<Hotel[]> {
+    return this.http.get<Hotel[]>(
+      'http://www.mocky.io/v2/5e4a7e4f2f00005d0097d253'
+    );
   }
 
-  getRooms(){
-    axios.get('https://run.mocky.io/v3/132af02e-8beb-438f-ac6e-a9902bc67036')
-    .then((result) => {
-      console.log('rooms',result.data);
-      return result.data
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-
+  getRooms(): Observable<Room[]> {
+    return this.http.get<Room[]>(
+      'https://run.mocky.io/v3/132af02e-8beb-438f-ac6e-a9902bc67036'
+    );
   }
 
-  getMealPlans(){
-    axios.get('http://www.mocky.io/v2/5e4a7e282f0000490097d252')
-    .then((result) => {
-      console.log('meal_plans',result.data);
-      return result.data
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-
+  getMealPlans(): Observable<MealPlan[]> {
+    return this.http.get<MealPlan[]>('http://www.mocky.io/v2/5e4a7e282f0000490097d252');
   }
 
-  getRoomDisponibility(){
-    axios.get('http://www.mocky.io/v2/5e4a7e282f0000490097d252')
-    .then((result) => {
-      console.log('room disponibility',result.data);
-      return result.data
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-
+  getRoomDisponibility(): Observable<RoomDisponibility[]> {
+    return this.http.get<RoomDisponibility[]>('http://www.mocky.io/v2/5e4e43272f00006c0016a52b');
   }
 
-  getMealDisponibility(){
-    axios.get('http://www.mocky.io/v2/5e4a7dd02f0000290097d24b')
-    .then((result) => {
-      console.log('meal disponibility',result.data);
-      return result.data
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-
+  getMealDisponibility(): Observable<MealDisponibility[]> {
+    return this.http.get<MealDisponibility[]>('http://www.mocky.io/v2/5e4a7dd02f0000290097d24b');
   }
-
-
 }
-
-
