@@ -5,6 +5,7 @@ import { Hotel } from './util-models/hotel.model';
 import { MealPlan } from './util-models/meal-plan.model';
 import { MealDisponibility } from './util-models/meal_disponibility.model';
 import { NormalisedHotel } from './util-models/normalised-hotel.model';
+import { NormalisedRoom } from './util-models/normalised-room.model';
 import { RoomDisponibility } from './util-models/room-disponibility.model';
 import { Room } from './util-models/room.model';
 
@@ -27,64 +28,100 @@ export class HomepageComponent implements OnInit {
   }
 
   recoverAllInfo() {
-    console.log('recoveredAllInfo');
-    let loaded = false
+    let loaded = false;
 
     this.hotelSrv
       .getHotels()
-      .subscribe((data: any) => (this.hotels =  data.hotels ));
+      .subscribe((data: any) => (this.hotels = data.hotels));
     this.hotelSrv
       .getMealDisponibility()
-      .subscribe(
-        (data: any) => (this.mealDisponibility = data.regimenes)
-      );
+      .subscribe((data: any) => (this.mealDisponibility = data.regimenes));
     this.hotelSrv
       .getMealPlans()
       .subscribe((data: any) => (this.mealPlans = data.meal_plans));
     this.hotelSrv
       .getRoomDisponibility()
-      .subscribe(
-        (data: any) => (this.roomDisponibility = data.hotels)
-      );
-    this.hotelSrv
-      .getRooms()
-      .subscribe((data: any) => (this.rooms = data.rooms_type),null,()=>this.mapHotelInfo(this.hotels));
-
+      .subscribe((data: any) => (this.roomDisponibility = data.hotels));
+    this.hotelSrv.getRooms().subscribe(
+      (data: any) => (this.rooms = data.rooms_type),
+      null,
+      () => this.normalizeHotelData(this.hotels, this.roomDisponibility)
+    );
   }
 
-  /* : NormalisedHotel[] */
+  /*  */
 
-  mapHotelInfo(hotelInfo: any) {
-      const normalisedHotelList: NormalisedHotel[] = [];
-      console.log(hotelInfo);
+  normalizeHotelData(
+    hotelInfo: any,
+    roomDisponibility: any
+  ): NormalisedHotel[] {
+    const normalisedHotelList: NormalisedHotel[] = [];
 
-      hotelInfo.forEach((hotel: Hotel, index: number) => {
-        console.log(hotel, index);
+    const mappedHotels = this.joinHotelsInfo(hotelInfo, roomDisponibility);
+    mappedHotels.forEach((hotel: Hotel, index: number) => {
+      const { code, city, name } = hotel;
+      const normalisedRooms = this.mapRoomInfo(code);
 
-        const { code, city, name } = hotel;
-        let normalisedHotel: NormalisedHotel | undefined;
-        normalisedHotel
-          ? ((normalisedHotel.city = city),
-            (normalisedHotel.code = code),
-            (normalisedHotel.name = name)
+      let normalisedHotel: NormalisedHotel = Object();
+      normalisedHotel
+        ? ((normalisedHotel.city = city),
+          (normalisedHotel.code = code),
+          (normalisedHotel.name = name),
+          (normalisedHotel.rooms = normalisedRooms))
+        : null;
+      console.log('hotelNormalised', normalisedHotel);
 
-            )
-          : null;
+      normalisedHotelList.push(normalisedHotel);
+    });
+    console.log(normalisedHotelList);
 
+    return normalisedHotelList;
+  }
 
+  mapRoomInfo(code: string) {
+    const roomsAvailable: NormalisedRoom[] = [];
+    const hotelRooms1 = this.mealDisponibility
+      ?.filter((room: MealDisponibility) => {
+        return room.hotel.includes(code);
+      })
+      .map((room: MealDisponibility) => {
+        return {
+          room_type: room.room_type,
+          name: room.room_type == 'st' ? 'Standard' : 'Suite',
+          meals_plan: room.code,
+          price: room.price,
+        };
       });
 
+    const hotelRooms2 = this.mealPlans?.map((room: MealPlan) => {
+      const hotelRooms: any[] = [];
+      if (room.hotel[code]) {
+        room.hotel[code].forEach((hotelRoom) => {
+          hotelRooms.push({
+            name: hotelRoom.room == 'st' ? 'Standard' : 'Suite',
+            room_type: hotelRoom.room,
+            price: hotelRoom.price,
+            meals_plan: room.code,
+          });
+        });
+      }
+      return hotelRooms;
+    }).flat();
+
+    return hotelRooms2?.concat(hotelRooms1)
   }
 
-  mapRoomInfo(code: string){
-   const hotelRoom = this.rooms?.filter((room: Room)=> {
-    return room.hotels.includes(code)
-    }
-   ).map((room: Room)=> {return({code:room.code,name:room.name})})
-
-
-    return hotelRoom
-
-
+  joinHotelsInfo(hotelInfo1: Hotel[], hotelInfo2: RoomDisponibility[]) {
+    const mappedInfo1 = hotelInfo1.map((hotel: Hotel) => ({
+      city: hotel.city,
+      code: hotel.code,
+      name: hotel.name,
+    }));
+    const mappedInfo2 = hotelInfo2.map((hotel: RoomDisponibility) => ({
+      city: hotel.location,
+      code: hotel.code,
+      name: hotel.name,
+    }));
+    return [...mappedInfo1, ...mappedInfo2];
   }
 }
