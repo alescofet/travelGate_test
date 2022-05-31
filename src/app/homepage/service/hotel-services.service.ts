@@ -6,7 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 import { Hotel } from '../util-models/hotel.model';
 import { Room } from '../util-models/room.model';
 import { MealPlan } from '../util-models/meal-plan.model';
-import { MealDisponibility } from '../util-models/meal_disponibility.model';
+import { MealDisponibility } from '../util-models/meal-disponibility.model';
 import { RoomDisponibility } from '../util-models/room-disponibility.model';
 
 @Injectable({

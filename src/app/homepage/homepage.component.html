@@ -1,3 +1,7 @@
-<p>homepage works!</p>
-<pre>HOTELS:{{normalisedHotelsList | json}}</pre>
+<h1 class="text-center text-6xl mb-5">Prueba técnica TravelGate</h1>
+<div class="flex flex-row flex-wrap justify-evenly items-start">
+  <ng-container *ngFor="let hotel of normalisedHotelsList">
+    <app-hotel [hotel]="hotel" class="w-1/4"></app-hotel>
+  </ng-container>
+</div>
 

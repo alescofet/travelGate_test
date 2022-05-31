@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HotelServicesService } from './service/hotel-services.service';
 import { Hotel } from './util-models/hotel.model';
 import { MealPlan } from './util-models/meal-plan.model';
-import { MealDisponibility } from './util-models/meal_disponibility.model';
+import { MealDisponibility } from './util-models/meal-disponibility.model';
 import { NormalisedHotel } from './util-models/normalised-hotel.model';
 import { NormalisedRoom } from './util-models/normalised-room.model';
 import { RoomDisponibility } from './util-models/room-disponibility.model';
@@ -122,9 +122,9 @@ export class HomepageComponent implements OnInit {
         if (room.hotel[code]) {
           room.hotel[code].forEach((hotelRoom) => {
             hotelRooms.push({
-              name: hotelRoom.room == 'standard' ? 'st' : 'su',
-              room_type:
+              name:
                 hotelRoom.room[0].toUpperCase() + hotelRoom.room.substring(1),
+              room_type: hotelRoom.room == 'standard' ? 'st' : 'su',
               price: hotelRoom.price,
               meals_plan: room.code,
             });
