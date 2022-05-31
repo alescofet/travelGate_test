@@ -20,6 +20,8 @@ export class HomepageComponent implements OnInit {
   mealPlans: MealPlan[] | undefined = [];
   roomDisponibility: RoomDisponibility[] | undefined = [];
   rooms: Room[] | undefined = [];
+  normalisedHotelsList: NormalisedHotel[] | undefined = [];
+  loaded = false;
 
   constructor(private hotelSrv: HotelServicesService) {}
 
@@ -28,33 +30,54 @@ export class HomepageComponent implements OnInit {
   }
 
   recoverAllInfo() {
-    let loaded = false;
-
-    this.hotelSrv
-      .getHotels()
-      .subscribe((data: any) => (this.hotels = data.hotels));
-    this.hotelSrv
-      .getMealDisponibility()
-      .subscribe((data: any) => (this.mealDisponibility = data.regimenes));
-    this.hotelSrv
-      .getMealPlans()
-      .subscribe((data: any) => (this.mealPlans = data.meal_plans));
-    this.hotelSrv
-      .getRoomDisponibility()
-      .subscribe((data: any) => (this.roomDisponibility = data.hotels));
-    this.hotelSrv.getRooms().subscribe(
-      (data: any) => (this.rooms = data.rooms_type),
-      null,
-      () => this.normalizeHotelData(this.hotels, this.roomDisponibility)
+    this.hotelSrv.getHotels().subscribe(
+      (data: any) => (this.hotels = data.hotels),
+      (err) => {
+        console.log(err);
+      },
+      () => {
+        this.hotelSrv.getMealDisponibility().subscribe(
+          (data: any) => (this.mealDisponibility = data.regimenes),
+          (err) => {
+            console.log(err);
+          },
+          () => {
+            this.hotelSrv.getMealPlans().subscribe(
+              (data: any) => (this.mealPlans = data.meal_plans),
+              (err) => {
+                console.log(err);
+              },
+              () => {
+                this.hotelSrv.getRoomDisponibility().subscribe(
+                  (data: any) => (this.roomDisponibility = data.hotels),
+                  (err) => {
+                    console.log(err);
+                  },
+                  () => {
+                    this.hotelSrv.getRooms().subscribe(
+                      (data: any) => (this.rooms = data.rooms_type),
+                      (err) => {
+                        console.log(err);
+                      },
+                      () =>
+                        this.normalizeHotelData(
+                          this.hotels,
+                          this.roomDisponibility
+                        )
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
     );
   }
 
   /*  */
 
-  normalizeHotelData(
-    hotelInfo: any,
-    roomDisponibility: any
-  ): NormalisedHotel[] {
+  normalizeHotelData(hotelInfo: any, roomDisponibility: any) {
     const normalisedHotelList: NormalisedHotel[] = [];
 
     const mappedHotels = this.joinHotelsInfo(hotelInfo, roomDisponibility);
@@ -75,7 +98,7 @@ export class HomepageComponent implements OnInit {
     });
     console.log(normalisedHotelList);
 
-    return normalisedHotelList;
+    this.normalisedHotelsList = normalisedHotelList;
   }
 
   mapRoomInfo(code: string) {
@@ -93,22 +116,25 @@ export class HomepageComponent implements OnInit {
         };
       });
 
-    const hotelRooms2 = this.mealPlans?.map((room: MealPlan) => {
-      const hotelRooms: any[] = [];
-      if (room.hotel[code]) {
-        room.hotel[code].forEach((hotelRoom) => {
-          hotelRooms.push({
-            name: hotelRoom.room == 'st' ? 'Standard' : 'Suite',
-            room_type: hotelRoom.room,
-            price: hotelRoom.price,
-            meals_plan: room.code,
+    const hotelRooms2 = this.mealPlans
+      ?.map((room: MealPlan) => {
+        const hotelRooms: any[] = [];
+        if (room.hotel[code]) {
+          room.hotel[code].forEach((hotelRoom) => {
+            hotelRooms.push({
+              name: hotelRoom.room == 'standard' ? 'st' : 'su',
+              room_type:
+                hotelRoom.room[0].toUpperCase() + hotelRoom.room.substring(1),
+              price: hotelRoom.price,
+              meals_plan: room.code,
+            });
           });
-        });
-      }
-      return hotelRooms;
-    }).flat();
+        }
+        return hotelRooms;
+      })
+      .flat();
 
-    return hotelRooms2?.concat(hotelRooms1)
+    return hotelRooms2?.concat(hotelRooms1);
   }
 
   joinHotelsInfo(hotelInfo1: Hotel[], hotelInfo2: RoomDisponibility[]) {
