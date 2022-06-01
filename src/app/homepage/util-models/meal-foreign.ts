@@ -1,4 +1,4 @@
-export interface MealDisponibility{
+export interface MealForeign{
   code: string
   name: string
   hotel: string

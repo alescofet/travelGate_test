@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import axios, { AxiosResponse } from 'axios';
-import { Hotel } from '../util-models/hotel.model';
+import { HotelEsp } from '../util-models/hotel-esp.model';
 import { Room } from '../util-models/room.model';
-import { MealPlan } from '../util-models/meal-plan.model';
-import { MealDisponibility } from '../util-models/meal-disponibility.model';
-import { RoomDisponibility } from '../util-models/room-disponibility.model';
+import { MealEsp } from '../util-models/meal-esp.model';
+import { MealForeign } from '../util-models/meal-foreign';
+import { HotelForeign } from '../util-models/hotel-foreign.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +15,8 @@ import { RoomDisponibility } from '../util-models/room-disponibility.model';
 export class HotelServicesService {
   constructor(private http: HttpClient) {}
 
-  getHotels(): Observable<Hotel[]> {
-    return this.http.get<Hotel[]>(
+  getHotelsEsp(): Observable<HotelEsp[]> {
+    return this.http.get<HotelEsp[]>(
       'http://www.mocky.io/v2/5e4a7e4f2f00005d0097d253'
     );
   }
@@ -27,15 +27,15 @@ export class HotelServicesService {
     );
   }
 
-  getMealPlans(): Observable<MealPlan[]> {
-    return this.http.get<MealPlan[]>('http://www.mocky.io/v2/5e4a7e282f0000490097d252');
+  getMealForeign(): Observable<MealEsp[]> {
+    return this.http.get<MealEsp[]>('http://www.mocky.io/v2/5e4a7e282f0000490097d252');
   }
 
-  getRoomDisponibility(): Observable<RoomDisponibility[]> {
-    return this.http.get<RoomDisponibility[]>('http://www.mocky.io/v2/5e4e43272f00006c0016a52b');
+  getHotelsForeign(): Observable<HotelForeign[]> {
+    return this.http.get<HotelForeign[]>('http://www.mocky.io/v2/5e4e43272f00006c0016a52b');
   }
 
-  getMealDisponibility(): Observable<MealDisponibility[]> {
-    return this.http.get<MealDisponibility[]>('http://www.mocky.io/v2/5e4a7dd02f0000290097d24b');
+  getMealEsp(): Observable<MealForeign[]> {
+    return this.http.get<MealForeign[]>('http://www.mocky.io/v2/5e4a7dd02f0000290097d24b');
   }
 }

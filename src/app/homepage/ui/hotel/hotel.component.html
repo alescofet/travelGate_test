@@ -1,7 +1,7 @@
-<div class="flex flex-col justify-evenly items-center w-11/12 bg-slate-200 rounded-lg p-5">
-  <h1>{{hotel?.name}}</h1>
-  <h2>{{hotel?.city}}</h2>
-  <div *ngFor="let room of hotel?.rooms" class="bg-orange-300 rounded-lg p-2 my-4 text-center">
+<div class="flex flex-col items-center w-full p-5 rounded-lg justify-evenly bg-slate-200">
+  <h1 class="text-2xl font-bold">{{hotel?.name}}</h1>
+  <h2 class="font-bold">{{hotel?.city}}</h2>
+  <div *ngFor="let room of hotel?.rooms" class="p-2 my-4 text-center bg-orange-300 rounded-lg">
     <h1>{{room.name}} --> {{checkMealPlan(room.meals_plan)}}</h1>
     <h2>Precio/Noche: {{room.price}}€</h2>
   </div>

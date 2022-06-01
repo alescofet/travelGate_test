@@ -1,4 +1,4 @@
-export interface RoomDisponibility{
+export interface HotelForeign{
   code: string
   name: string
   location: string

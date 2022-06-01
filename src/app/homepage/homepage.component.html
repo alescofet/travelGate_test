@@ -1,7 +1,7 @@
-<h1 class="text-center text-6xl mb-5">Prueba técnica TravelGate</h1>
-<div class="flex flex-row flex-wrap justify-evenly items-start">
+<h1 class="mb-5 text-6xl text-center">Prueba técnica TravelGate</h1>
+<div class="flex flex-row flex-wrap items-start justify-evenly">
   <ng-container *ngFor="let hotel of normalisedHotelsList">
-    <app-hotel [hotel]="hotel" class="w-1/4"></app-hotel>
+    <app-hotel [hotel]="hotel"></app-hotel>
   </ng-container>
 </div>
 

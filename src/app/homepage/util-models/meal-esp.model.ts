@@ -1,4 +1,4 @@
-export interface MealPlan{
+export interface MealEsp{
   code: string
   name: string
   hotel: {

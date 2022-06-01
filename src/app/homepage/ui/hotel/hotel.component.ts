@@ -14,6 +14,7 @@ export class HotelComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.sortRoomsbyPrice()
   }
 
   checkMealPlan(code: string){
@@ -36,6 +37,10 @@ export class HotelComponent implements OnInit {
         break;
     }
 
+  }
+
+  sortRoomsbyPrice(){
+    this.hotel?.rooms?.sort((a,b)=> a.price-b.price)
   }
 
 
