@@ -19,6 +19,9 @@ export class HomepageComponent implements OnInit {
   hotelsForeign: HotelForeign[] | undefined = [];
   rooms: Room[] | undefined = [];
   normalisedHotelsList: NormalisedHotel[] | undefined = [];
+  showHotels: boolean = false
+  showJson: boolean = false
+  showSelection: boolean = false
 
   constructor(private hotelSrv: HotelServicesService) {}
 
@@ -28,7 +31,14 @@ export class HomepageComponent implements OnInit {
 
   recoverAllInfo() {
     /* xxxxxxxxxxxxxxxxxxx    Function that recovers all info from each endpoint    xxxxxxxxxxxxxxxxxxx */
-    this.hotelSrv.getHotelsEsp().subscribe(
+
+    /*
+        I used the third parameter of suscribe to launch each call when the previous one is finished and once all information is recovered I launch the function that will
+        merge and format all the information(I tried the forkJoin to parallelize the calls, but haven't managed to make it work)
+    */
+
+
+      this.hotelSrv.getHotelsEsp().subscribe(
       (data: any) => (this.hotelsEsp = data.hotels),
       (err) => {
         console.log(err);
@@ -90,7 +100,7 @@ export class HomepageComponent implements OnInit {
         ? ((normalisedHotel.city = city),
           (normalisedHotel.code = code),
           (normalisedHotel.name = name),
-          (normalisedHotel.rooms = normalisedRooms))
+          (normalisedHotel.rooms = [normalisedRooms].flat()))
         : null;
 
       normalisedHotelList.push(normalisedHotel);
@@ -134,7 +144,7 @@ export class HomepageComponent implements OnInit {
       })
       .flat();
 
-    return hotelRooms2?.concat(hotelRooms1);
+    return hotelRooms2?.concat(hotelRooms1);        // concatenate both arrays of normalised rooms to make one and return it
   }
 
   joinHotelsInfo(hotelEsp: HotelEsp[], hotelforeign: HotelForeign[]) {
@@ -152,5 +162,32 @@ export class HomepageComponent implements OnInit {
       name: hotel.name,
     }));
     return [...mappedInfo1, ...mappedInfo2];
+  }
+
+  switchView(selection: string){
+    switch (selection) {
+      case "hotel":
+        this.showHotels = true
+        this.showJson = false
+        this.showSelection = false
+        return null
+
+      case "json":
+        this.showHotels = false
+        this.showJson = true
+        this.showSelection = false
+        return null
+
+      case "selection":
+        this.showHotels = false
+        this.showJson = false
+        this.showSelection = true
+        return null
+
+
+      default:
+        return null
+
+    }
   }
 }

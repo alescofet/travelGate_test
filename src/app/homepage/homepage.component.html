@@ -1,7 +1,18 @@
 <h1 class="mb-5 text-6xl text-center">Prueba técnica TravelGate</h1>
+<div class="flex items-center w-1/2 mx-auto mb-6 justify-evenly">
+  <button (click)="this.switchView('hotel')" class="py-6 rounded-md px-14 bg-cyan-400">Hoteles</button>
+  <button (click)="this.switchView('json')" class="py-6 rounded-md px-14 bg-cyan-400">JSON</button>
+  <button (click)="this.switchView('selection')" class="py-6 rounded-md px-14 bg-cyan-400">Parte 2</button>
+</div>
 <div class="flex flex-row flex-wrap items-start justify-evenly">
-  <ng-container *ngFor="let hotel of normalisedHotelsList">
-    <app-hotel [hotel]="hotel"></app-hotel>
+  <ng-container  *ngIf="this.showHotels">
+    <ng-container *ngFor="let hotel of normalisedHotelsList">
+      <app-hotel [hotel]="hotel"></app-hotel>
+    </ng-container>
   </ng-container>
+  <ng-container  *ngIf="this.showJson">
+    <div *ngFor="let hotel of normalisedHotelsList"><app-plain-json [hotel]="hotel"></app-plain-json> </div>
+  </ng-container>
+  <ng-container  *ngIf="this.showSelection"><app-part-two [hotelsList]="normalisedHotelsList"></app-part-two></ng-container>
 </div>
 

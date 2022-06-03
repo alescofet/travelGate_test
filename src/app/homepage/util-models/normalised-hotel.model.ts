@@ -4,5 +4,5 @@ export interface NormalisedHotel {
   code: string;
   name: string;
   city: string;
-  rooms: NormalisedRoom[] | undefined;
+  rooms: NormalisedRoom[];
 }

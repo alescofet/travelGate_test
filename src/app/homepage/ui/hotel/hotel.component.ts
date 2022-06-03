@@ -17,7 +17,7 @@ export class HotelComponent implements OnInit {
     this.sortRoomsbyPrice()
   }
 
-  checkMealPlan(code: string){
+  checkMealPlan(code: string){    //  function that uses an enum to convert the meal code to the complete word
     switch (code) {
       case "pc":
         return MealEnum.pc

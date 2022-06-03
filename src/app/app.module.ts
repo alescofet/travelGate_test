@@ -6,13 +6,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { HotelComponent } from './homepage/ui/hotel/hotel.component';
+import { PlainJsonComponent } from './homepage/ui/plain-json/plain-json.component';
+import { PartTwoComponent } from './homepage/ui/part-two/part-two.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
-    HotelComponent
+    HotelComponent,
+    PlainJsonComponent,
+    PartTwoComponent
   ],
   imports: [
     BrowserModule,
