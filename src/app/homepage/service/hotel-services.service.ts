@@ -27,7 +27,7 @@ export class HotelServicesService {
     );
   }
 
-  getMealForeign(): Observable<MealEsp[]> {
+  getMealEsp(): Observable<MealEsp[]> {
     return this.http.get<MealEsp[]>('http://www.mocky.io/v2/5e4a7e282f0000490097d252');
   }
 
@@ -35,7 +35,7 @@ export class HotelServicesService {
     return this.http.get<HotelForeign[]>('http://www.mocky.io/v2/5e4e43272f00006c0016a52b');
   }
 
-  getMealEsp(): Observable<MealForeign[]> {
+  getMealForeign(): Observable<MealForeign[]> {
     return this.http.get<MealForeign[]>('http://www.mocky.io/v2/5e4a7dd02f0000290097d24b');
   }
 }

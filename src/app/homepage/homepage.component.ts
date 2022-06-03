@@ -44,13 +44,13 @@ export class HomepageComponent implements OnInit {
         console.log(err);
       },
       () => {
-        this.hotelSrv.getMealEsp().subscribe(
+        this.hotelSrv.getMealForeign().subscribe(
           (data: any) => (this.mealsForeign = data.regimenes),
           (err) => {
             console.log(err);
           },
           () => {
-            this.hotelSrv.getMealForeign().subscribe(
+            this.hotelSrv.getMealEsp().subscribe(
               (data: any) => (this.mealsEsp = data.meal_plans),
               (err) => {
                 console.log(err);
